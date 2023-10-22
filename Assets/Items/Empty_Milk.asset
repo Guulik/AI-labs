@@ -15,4 +15,5 @@ MonoBehaviour:
   itemName: Milk
   sprite: {fileID: 1868119981, guid: 4ac57ee92b1375d4eb9645ef8992ee6f, type: 3}
   prefab: {fileID: 1107020359307351026, guid: 3272ee7c967d80544bde26a2b2bbd228, type: 3}
+  count: 0
   isCorrect: 0

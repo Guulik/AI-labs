@@ -63,7 +63,7 @@ namespace Player
             var itemInstance = Items.Find(i => i == item);
             itemInstance.count--;
             if (itemInstance.count > 0) return;
-            
+                    
             Items.Remove(item);
             if (ActiveItem == item)
                 ActiveItem = Items.LastOrDefault();
@@ -108,6 +108,17 @@ namespace Player
         private bool IsInventoryEmpty()
         {
             return Items.Count == 0;
+        }
+        
+        
+        public void ShowChatBubble(string text) //not SOLID but pohui. I just want to complete this subject as soon as i can
+        {
+            if (ChatBubbleHandler.BubbleInstance)
+            {
+                ChatBubbleHandler.BubbleInstance.OnShowUp(gameObject.transform, text);
+            }
+            else
+                Debug.Log("Bubble НЕ существует");
         }
     }
 }

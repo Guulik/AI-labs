@@ -1,6 +1,7 @@
 using Items;
 using Player;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace NPC
 {
@@ -8,41 +9,68 @@ namespace NPC
     {
         [SerializeField] private Item emptyMilk;
         [SerializeField] private Item filledMilk;
+        [SerializeField] private Item food;
+        private bool isFed = false;
 
         private void OnEnable()
         {
+            _playerInput.Player.Interact.started += Interact;
             TakeItem += PlayerInventory.Inventory.RemoveItem;
             GiveItem += PlayerInventory.Inventory.ReceiveItem;
         }
 
         private void OnDisable()
         {
+            _playerInput.Player.Interact.started -= Interact;
             TakeItem -= PlayerInventory.Inventory.RemoveItem;
             GiveItem -= PlayerInventory.Inventory.ReceiveItem;
         }
 
-        public void Interact()
+        private void Interact(InputAction.CallbackContext context)
         {
-            if (CheckBottle())
+            if (!_canInteract) return;
+
+            if (isFed)
             {
-                ChangeMilk();
-                ShowChatBubble("Вот твое млеко");
+                if (CheckBottle())
+                {
+                    ChangeMilk();
+                    ShowChatBubble("Вот твое млеко");
+                }
+                else
+                {
+                    ShowChatBubble("Ты пришел без бутылочки((");
+                }
             }
             else
             {
-                ShowChatBubble("Ты пришел без бутылочки((");
+                if (CheckFood())
+                {
+                    ShowChatBubble("Вот спасибо!");
+                    isFed = true;
+                    OnTakeItem(food);
+                }
+                else
+                {
+                    ShowChatBubble("Я голодна, дай пожалуйста пшенички");
+                }
             }
         }
-        
+
         private void ChangeMilk()
         {
             OnTakeItem(emptyMilk);
             OnGiveItem(filledMilk);
         }
 
+        private bool CheckFood()
+        {
+            return PlayerInventory.Inventory.ActiveItem == food;
+        }
+
         private bool CheckBottle()
         {
-            return PlayerInventory.Inventory.ActiveItem==emptyMilk;
+            return PlayerInventory.Inventory.ActiveItem == emptyMilk;
         }
     }
 }

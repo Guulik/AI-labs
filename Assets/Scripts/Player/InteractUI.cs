@@ -5,20 +5,13 @@ using UnityEngine;
 public class InteractUI : MonoBehaviour
 {
     [SerializeField] private GameObject interactUI;
-    [SerializeField] private PlayerInteract _playerInteract;
-
-    void Update()
-    {
-        if (_playerInteract.getInteractable() != null) Show();
-        else Hide();
-    }
     
-    void Show()
+    public void Show()
     {
         interactUI.SetActive(true);
     }
 
-    void Hide()
+    public void Hide()
     {
         interactUI.SetActive(false);
     }

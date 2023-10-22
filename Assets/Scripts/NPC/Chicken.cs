@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using Items;
 using Player;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace NPC
 {
@@ -13,16 +15,20 @@ namespace NPC
 
         private void OnEnable()
         {
+            _playerInput.Player.Interact.started += Interact;
             TakeItem += PlayerInventory.Inventory.RemoveItem;
         }
 
         private void OnDisable()
         {
+            _playerInput.Player.Interact.started -= Interact;
             TakeItem -= PlayerInventory.Inventory.RemoveItem;
         }
 
-        public void Interact()
+        private void Interact(InputAction.CallbackContext context)
         {
+            if (!_canInteract) return;
+            
             if (CheckPass())
                 GiveEgg();
             else 
@@ -47,7 +53,7 @@ namespace NPC
                 
                 ShowChatBubble("Держи яйко");
                 
-                GameObject rewardObject = Instantiate(reward, gameObject.transform);
+                GameObject rewardObject = Instantiate(reward, transform.position, quaternion.identity);
                 rewardObject.transform.localPosition = new Vector3(2f, 0.5f, 0f);
             }
         }
